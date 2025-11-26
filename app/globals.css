@@ -1,26 +1,240 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Paper Colors */
+  --paper-white: #fdfdf8;
+  --paper-cream: #faf8f3;
+  --paper-yellow: #fffacd;
+  --paper-aged: #f4f1e8;
+  
+  /* Ink Colors */
+  --ink-black: #2c2c2c;
+  --ink-blue: #1e3a8a;
+  --ink-red: #b91c1c;
+  --ink-gray: #6b7280;
+  
+  /* Line Colors */
+  --line-blue: #cfe2ff;
+  --line-gray: #e5e7eb;
+  --margin-red: #ef4444;
+  
+  /* Shadows */
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-deep: 0 8px 32px rgba(0, 0, 0, 0.16);
+  --shadow-page: 2px 2px 8px rgba(0, 0, 0, 0.15), 
+                 -1px -1px 4px rgba(255, 255, 255, 0.5);
+  
+  /* Textures */
+  --noise-opacity: 0.03;
+  --grain-size: 200px;
+  
+  /* Notebook Binding */
+  --binding-dark: #8b4513;
+  --binding-light: #d2691e;
+  --metal-silver: #c0c0c0;
+  
+  /* Background */
+  --desk-wood: #5d4e37;
+  --desk-gradient: linear-gradient(135deg, #6b5b4a 0%, #4a3f35 100%);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper-white: var(--paper-white);
+  --color-paper-cream: var(--paper-cream);
+  --color-ink-black: var(--ink-black);
+  --color-ink-blue: var(--ink-blue);
+  
+  --font-handwriting: 'Caveat', cursive;
+  --font-casual: 'Kalam', cursive;
+  --font-hand: 'Patrick Hand', cursive;
+  --font-indie: 'Indie Flower', cursive;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--desk-gradient);
+  color: var(--ink-black);
+  font-family: 'Kalam', cursive;
+  overflow-x: hidden;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Wood desk texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Paper grain texture */
+.paper-texture {
+  position: relative;
+}
+
+.paper-texture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  background-size: var(--grain-size);
+  pointer-events: none;
+  opacity: var(--noise-opacity);
+  z-index: 1;
+}
+
+/* Ruled paper lines */
+.ruled-lines {
+  background-image: 
+    linear-gradient(to right, var(--margin-red) 1px, transparent 1px),
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 31px,
+      var(--line-blue) 31px,
+      var(--line-blue) 32px
+    );
+  background-size: 100% 100%, 100% 32px;
+  background-position: 60px 0, 0 8px;
+}
+
+.ruled-lines-gray {
+  background-image: 
+    linear-gradient(to right, var(--margin-red) 1px, transparent 1px),
+    repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 27px,
+      var(--line-gray) 27px,
+      var(--line-gray) 28px
+    );
+  background-size: 100% 100%, 100% 28px;
+  background-position: 60px 0, 0 12px;
+}
+
+/* Smooth page transitions */
+.page-transition {
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.6s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Handwriting cursor */
+.handwriting-cursor {
+  cursor: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 21L12 3L21 21L12 18L3 21Z' fill='%231e3a8a' stroke='%23000' stroke-width='0.5'/%3E%3C/svg%3E") 12 12, text;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--binding-dark);
+  border-radius: 6px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--binding-light);
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(30, 58, 138, 0.2);
+  color: var(--ink-black);
+}
+
+/* Animations */
+@keyframes pageFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(-90deg);
+  }
+  100% {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes pageCurl {
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(-15deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Utility classes */
+.shadow-page {
+  box-shadow: var(--shadow-page);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-medium {
+  box-shadow: var(--shadow-medium);
+}
+
+.shadow-deep {
+  box-shadow: var(--shadow-deep);
 }
