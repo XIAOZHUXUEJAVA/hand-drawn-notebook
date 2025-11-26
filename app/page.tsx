@@ -10,11 +10,40 @@ export default function NotebookApp() {
   const [notebooks] = useState(sampleNotebooks);
   const [activeNotebook, setActiveNotebook] = useState<string | null>('nb1');
   const [activeSection, setActiveSection] = useState<string | null>('sec1');
+  // Initialize state with function to avoid hydration mismatch, or use useEffect
   const [currentNotes, setCurrentNotes] = useState<Note[]>(sampleNotes);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [activeTool, setActiveTool] = useState<Tool>('pen');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pageDirection, setPageDirection] = useState<'forward' | 'backward'>('forward');
+
+  // Load notes from local storage on mount
+  useEffect(() => {
+    const savedNotes = localStorage.getItem('notebook_notes');
+    if (savedNotes) {
+      try {
+        const parsed = JSON.parse(savedNotes);
+        // Convert date strings back to Date objects
+        const hydratedNotes = parsed.map((note: any) => ({
+          ...note,
+          createdAt: new Date(note.createdAt),
+          updatedAt: new Date(note.updatedAt),
+        }));
+        setCurrentNotes(hydratedNotes);
+      } catch (e) {
+        console.error('Failed to load notes', e);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
+
+  // Save notes to local storage whenever they change
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('notebook_notes', JSON.stringify(currentNotes));
+    }
+  }, [currentNotes, isLoaded]);
 
   // Update notes when section changes
   useEffect(() => {
@@ -28,31 +57,7 @@ export default function NotebookApp() {
     }
   }, [activeNotebook, activeSection, notebooks]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // New note with 'N' key
-      if (e.key === 'n' || e.key === 'N') {
-        if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-          handleNewNote();
-        }
-      }
-      // Navigate with arrow keys
-      if (e.key === 'ArrowLeft') {
-        if (currentPageIndex > 0) {
-          handlePageChange(currentPageIndex - 1);
-        }
-      }
-      if (e.key === 'ArrowRight') {
-        if (currentPageIndex < currentNotes.length - 1) {
-          handlePageChange(currentPageIndex + 1);
-        }
-      }
-    };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentPageIndex, currentNotes.length]);
 
   const currentNote = currentNotes[currentPageIndex];
 
@@ -94,6 +99,34 @@ export default function NotebookApp() {
         setCurrentPageIndex(Math.max(0, currentPageIndex - 1));
       }
     }
+  };
+
+  const handleAddImage = (file: File) => {
+    if (!currentNote) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      if (result) {
+        const newAttachment = {
+          id: `att-${Date.now()}`,
+          type: 'image' as const,
+          url: result,
+          name: file.name,
+          rotation: Math.random() * 10 - 5, // Random rotation for style
+          position: { x: 0, y: 0 }, // Default position
+        };
+        
+        const updatedNote = {
+          ...currentNote,
+          attachments: [...(currentNote.attachments || []), newAttachment],
+          updatedAt: new Date(),
+        };
+        
+        handleNoteUpdate(updatedNote);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const pageVariants = {
@@ -152,6 +185,7 @@ export default function NotebookApp() {
         onToolChange={setActiveTool}
         onNewNote={handleNewNote}
         onDeleteNote={handleDeleteNote}
+        onAddImage={handleAddImage}
       />
 
       {/* Main Content Area */}
@@ -234,24 +268,7 @@ export default function NotebookApp() {
         ❓
       </motion.button>
 
-      {/* Keyboard Shortcuts Hint */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5 }}
-        className="fixed bottom-24 right-8 px-4 py-2 rounded-lg shadow-md text-xs z-40"
-        style={{
-          background: 'rgba(253, 253, 248, 0.95)',
-          border: '1px solid rgba(0, 0, 0, 0.1)',
-          fontFamily: "'Indie Flower', cursive",
-        }}
-      >
-        <div className="space-y-1">
-          <div><kbd className="px-2 py-1 bg-gray-200 rounded">←</kbd> Previous page</div>
-          <div><kbd className="px-2 py-1 bg-gray-200 rounded">→</kbd> Next page</div>
-          <div><kbd className="px-2 py-1 bg-gray-200 rounded">N</kbd> New note</div>
-        </div>
-      </motion.div>
+
     </div>
   );
 }

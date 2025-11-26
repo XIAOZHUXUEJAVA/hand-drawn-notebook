@@ -3,4 +3,3 @@ export { Toolbar } from './Toolbar';
 export { NotePage } from './NotePage';
 export { Sidebar } from './Sidebar';
 export { PageNavigator } from './PageNavigator';
-export { DrawingCanvas } from './DrawingCanvas';

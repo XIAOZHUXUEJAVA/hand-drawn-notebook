@@ -16,7 +16,7 @@ export const NotePage: React.FC<NotePageProps> = ({
 }) => {
   const [isFlipping, setIsFlipping] = useState(false);
   const editorRef = React.useRef<HTMLDivElement>(null);
-  const lastToolRef = React.useRef<Tool>(activeTool);
+  const lastToolRef = React.useRef<Tool | undefined>(activeTool);
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     // Legacy handler, kept for safety but not used by contentEditable
@@ -61,14 +61,25 @@ export const NotePage: React.FC<NotePageProps> = ({
       const style = getTextStyleForTool(activeTool);
       
       Object.assign(span.style, style);
-      span.innerHTML = '&#8203;'; // Zero-width space
+
+      if (!selection.isCollapsed) {
+          // If text is selected, wrap it in the span
+          const content = range.extractContents();
+          span.appendChild(content);
+          range.insertNode(span);
+          
+          // Select the new span content
+          range.selectNodeContents(span);
+      } else {
+          // If no text is selected, insert an empty span for typing
+          span.innerHTML = '&#8203;'; // Zero-width space
+          range.insertNode(span);
+          
+          // Move cursor inside the span
+          range.setStart(span, 1);
+          range.setEnd(span, 1);
+      }
       
-      range.deleteContents();
-      range.insertNode(span);
-      
-      // Move cursor inside the span
-      range.setStart(span, 1);
-      range.setEnd(span, 1);
       selection.removeAllRanges();
       selection.addRange(range);
     };
@@ -139,21 +150,23 @@ export const NotePage: React.FC<NotePageProps> = ({
         };
       case 'highlighter':
         return {
-          color: '#000000',  // Black text
-          fontWeight: 600,    // Semi-bold
+          color: 'inherit',   // Keep original text color
+          fontWeight: 'inherit', // Keep original font weight
           opacity: 1,
           textShadow: 'none',
-          background: 'linear-gradient(transparent 60%, rgba(251, 191, 36, 0.4) 60%)', // Yellow highlight effect
+          background: 'rgba(255, 255, 0, 0.4)', // Classic yellow highlighter overlay
           WebkitTextStroke: '0px',
         };
       case 'eraser':
         return {
-          color: '#e5e7eb',  // Very light gray (almost invisible)
+          color: '#4b5563',  // Dark gray (visible but distinct)
           fontWeight: 400,
-          opacity: 0.3,       // Very transparent
+          opacity: 0.8,       // Slightly faded
           textShadow: 'none',
           background: 'transparent',
           WebkitTextStroke: '0px',
+          textDecoration: 'line-through', // Strikethrough effect
+          textDecorationColor: 'currentColor',
         };
       default:
         return {

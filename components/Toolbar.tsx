@@ -9,6 +9,7 @@ interface ToolbarProps {
   onToolChange: (tool: Tool) => void;
   onNewNote: () => void;
   onDeleteNote: () => void;
+  onAddImage: (file: File) => void;
 }
 
 const tools: { id: Tool; label: string; icon: string; color: string }[] = [
@@ -25,7 +26,19 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onToolChange,
   onNewNote,
   onDeleteNote,
+  onAddImage,
 }) => {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      onAddImage(file);
+    }
+    // Reset input so same file can be selected again
+    if (e.target) e.target.value = '';
+  };
+
   return (
     <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
       <motion.div
@@ -61,6 +74,21 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         ))}
 
         <div className="w-px h-8 bg-white/20 mx-2" />
+
+        {/* Image Upload Button */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+        <ToolButton
+          icon="🖼️"
+          label="Add Image"
+          onClick={() => fileInputRef.current?.click()}
+          color="#3b82f6"
+        />
 
         {/* Delete Button */}
         <ToolButton
