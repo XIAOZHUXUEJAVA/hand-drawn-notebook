@@ -90,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               damping: 20,
               mass: 1.2,
             }}
-            className="fixed left-0 top-0 h-full w-[320px] z-40"
+            className="fixed left-4 top-4 bottom-4 w-[320px] z-40"
             style={{
               perspective: "2000px",
               transformStyle: "preserve-3d",
@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             {/* Main Cardstock Body */}
             <div
-              className="relative h-full overflow-hidden flex flex-col"
+              className="relative h-full overflow-hidden flex flex-col rounded-xl"
               style={{
                 background: "#f2eecb", // Manilla folder color
                 backgroundImage: `
@@ -113,7 +113,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               {/* Close Button */}
               <button
                 onClick={onToggle}
-                className="absolute top-8 right-8 p-2.5 text-gray-500 hover:text-gray-800 transition-all duration-200 hover:scale-110 z-20 rounded-full hover:bg-white/50"
+                className="absolute top-6 right-6 p-2 text-gray-500 hover:text-gray-800 transition-all duration-200 hover:scale-110 z-20 rounded-full hover:bg-white/50"
                 aria-label="Close sidebar"
               >
                 <svg
@@ -140,12 +140,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   scrollbarColor: "#8b4513 rgba(0,0,0,0.1)",
                 }}
               >
-                <div className="px-12 py-16">
+                <div className="px-5 pt-14 pb-6">
                   {/* Header */}
-                  <div className="mb-16">
+                  <div className="mb-6">
                     <div className="relative inline-block">
                       <h2
-                        className="text-4xl text-[#2c2c2c] relative z-10"
+                        className="text-2xl text-[#2c2c2c] relative z-10"
                         style={{
                           fontFamily: "'Caveat', cursive",
                           fontWeight: 700,
@@ -174,7 +174,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
 
                   {/* Notebooks List */}
-                  <div className="flex flex-col gap-3 pb-10">
+                  <div className="flex flex-col gap-3 pb-4">
                     {notebooks.map((notebook, nbIndex) => (
                       <NotebookItem
                         key={notebook.id}
@@ -188,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     ))}
 
                     {/* Add Notebook Button */}
-                    <div className="flex justify-center mt-10">
+                    <div className="flex justify-center mt-6">
                       <motion.button
                         whileHover={{ scale: 1.05, y: -2 }}
                         whileTap={{ scale: 0.95 }}
@@ -275,7 +275,7 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
         className="cursor-pointer relative z-10"
       >
         <div
-          className="relative px-5 py-5 rounded-xl border border-black/10 overflow-hidden transition-all duration-300"
+          className="relative px-4 py-3.5 rounded-xl border border-black/10 overflow-hidden transition-all duration-300"
           style={{
             background: isActive ? notebook.coverColor : "white",
             boxShadow: isActive
@@ -286,16 +286,16 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
           {/* Paper texture overlay */}
           <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')] mix-blend-multiply pointer-events-none" />
 
-          <div className="flex items-center gap-3.5 relative z-10">
+          <div className="flex items-center gap-3 relative z-10">
             {/* Icon Container */}
-            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/30 shadow-inner border border-white/20 flex-shrink-0">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/30 shadow-inner border border-white/20 flex-shrink-0">
               {/* Notebook Icon SVG */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                className="w-5 h-5 text-gray-700"
+                className="w-4 h-4 text-gray-700"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -307,7 +307,7 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
 
             <div className="flex-1 overflow-hidden min-w-0">
               <h3
-                className={`text-lg font-bold leading-tight mb-1 truncate ${
+                className={`text-lg font-bold leading-tight mb-0.5 truncate ${
                   isActive ? "text-white" : "text-gray-800"
                 }`}
                 style={{
@@ -373,9 +373,9 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="overflow-hidden mt-6"
+            className="overflow-hidden mt-3"
           >
-            <div className="py-2 ml-6 pl-4 border-l-2 border-dashed border-gray-300">
+            <div className="py-1 ml-4 pl-4 border-l-2 border-dashed border-gray-300">
               <div className="flex flex-col gap-2">
                 {notebook.sections.map((section, sIndex) => (
                   <SectionItem
@@ -420,7 +420,7 @@ const SectionItem: React.FC<SectionItemProps> = ({
       className="group text-left"
     >
       <div
-        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
           isActive ? "bg-white shadow-sm" : "hover:bg-white/40"
         }`}
       >
@@ -434,7 +434,7 @@ const SectionItem: React.FC<SectionItemProps> = ({
         />
 
         <span
-          className={`text-sm ${
+          className={`text-base ${
             isActive
               ? "font-semibold text-gray-800"
               : "text-gray-600 group-hover:text-gray-800"
@@ -445,7 +445,7 @@ const SectionItem: React.FC<SectionItemProps> = ({
         </span>
 
         {section.notes.length > 0 && (
-          <span className="text-xs text-gray-400 font-mono ml-auto">
+          <span className="text-sm text-gray-400 font-mono ml-auto">
             {section.notes.length}
           </span>
         )}
