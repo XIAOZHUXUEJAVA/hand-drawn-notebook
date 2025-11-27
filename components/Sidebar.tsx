@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Notebook, Section } from '@/types';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Notebook, Section } from "@/types";
 
 interface SidebarProps {
   notebooks: Notebook[];
@@ -35,37 +35,38 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={onToggle}
             className="fixed top-8 left-8 z-50 flex items-center justify-center group"
             style={{
-              width: '60px',
-              height: '60px',
-              perspective: '1000px',
+              width: "60px",
+              height: "60px",
+              perspective: "1000px",
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <div 
+            <div
               className="relative w-full h-full flex items-center justify-center transition-transform duration-300 group-hover:-rotate-6"
               style={{
-                background: 'linear-gradient(135deg, #8b4513 0%, #a0522d 100%)',
-                borderRadius: '8px 4px 4px 8px',
-                boxShadow: '2px 4px 8px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.2)',
-                border: '1px solid #6d3710',
+                background: "linear-gradient(135deg, #8b4513 0%, #a0522d 100%)",
+                borderRadius: "8px 4px 4px 8px",
+                boxShadow:
+                  "2px 4px 8px rgba(0,0,0,0.3), inset 1px 1px 2px rgba(255,255,255,0.2)",
+                border: "1px solid #6d3710",
               }}
             >
               {/* Stitching effect */}
               <div className="absolute inset-1 border-2 border-dashed border-[#d2b48c] opacity-60 rounded-[6px_3px_3px_6px]" />
-              
+
               {/* Metal eyelet */}
               <div className="absolute left-2 w-3 h-3 rounded-full bg-[#d4af37] shadow-inner border border-[#b8860b]" />
 
               {/* Book Icon SVG */}
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
                 className="w-8 h-8 text-white drop-shadow-md transform transition-transform duration-300 group-hover:scale-110"
-                strokeWidth="2" 
-                strokeLinecap="round" 
+                strokeWidth="2"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               >
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -83,46 +84,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
             initial={{ x: -480, rotateY: 15 }}
             animate={{ x: 0, rotateY: 0 }}
             exit={{ x: -480, rotateY: 15 }}
-            transition={{ 
+            transition={{
               type: "spring",
               stiffness: 100,
               damping: 20,
-              mass: 1.2 
+              mass: 1.2,
             }}
-            className="fixed left-0 top-0 h-full w-[380px] z-40"
+            className="fixed left-0 top-0 h-full w-[320px] z-40"
             style={{
-              perspective: '2000px',
-              transformStyle: 'preserve-3d',
+              perspective: "2000px",
+              transformStyle: "preserve-3d",
             }}
           >
             {/* Main Cardstock Body */}
-            <div 
-              className="relative h-full w-full overflow-hidden flex flex-col"
+            <div
+              className="relative h-full overflow-hidden flex flex-col"
               style={{
-                background: '#f2eecb', // Manilla folder color
+                background: "#f2eecb", // Manilla folder color
                 backgroundImage: `
                   url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
                   linear-gradient(to right, rgba(0,0,0,0.05) 0%, transparent 5%, transparent 95%, rgba(0,0,0,0.02) 100%)
                 `,
-                boxShadow: '10px 0 25px rgba(0,0,0,0.15), 2px 0 5px rgba(0,0,0,0.1)',
-                borderRight: '1px solid rgba(0,0,0,0.1)',
+                boxShadow:
+                  "10px 0 25px rgba(0,0,0,0.15), 2px 0 5px rgba(0,0,0,0.1)",
+                borderRight: "1px solid rgba(0,0,0,0.1)",
               }}
             >
               {/* Close Button */}
               <button
                 onClick={onToggle}
-                className="absolute top-6 right-6 p-2 text-gray-500 hover:text-gray-800 transition-colors z-20"
+                className="absolute top-8 right-8 p-2.5 text-gray-500 hover:text-gray-800 transition-all duration-200 hover:scale-110 z-20 rounded-full hover:bg-white/50"
                 aria-label="Close sidebar"
               >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
                   strokeLinejoin="round"
                 >
                   <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -130,81 +132,95 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 </svg>
               </button>
 
-              {/* Content Area */}
-              <div className="flex-1 px-10 py-12 overflow-y-auto custom-scrollbar">
-                {/* Header */}
-                <div className="mb-14 pl-2 mt-4">
-                  <div className="relative inline-block">
-                    <h2
-                      className="text-5xl text-[#2c2c2c] relative z-10"
-                      style={{ 
-                        fontFamily: "'Caveat', cursive", 
-                        fontWeight: 700,
-                        transform: 'rotate(-2deg)',
-                      }}
+              {/* Content Area - 重构的布局 */}
+              <div
+                className="flex-1 overflow-y-auto"
+                style={{
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "#8b4513 rgba(0,0,0,0.1)",
+                }}
+              >
+                <div className="px-12 py-16">
+                  {/* Header */}
+                  <div className="mb-16">
+                    <div className="relative inline-block">
+                      <h2
+                        className="text-4xl text-[#2c2c2c] relative z-10"
+                        style={{
+                          fontFamily: "'Caveat', cursive",
+                          fontWeight: 700,
+                          transform: "rotate(-2deg)",
+                        }}
+                      >
+                        My Notebooks
+                      </h2>
+                      {/* Highlighter effect */}
+                      <div
+                        className="absolute bottom-1 left-0 w-[110%] h-3 -z-0 -rotate-1 opacity-60"
+                        style={{
+                          background:
+                            "linear-gradient(90deg, transparent 0%, #ffeb3b 10%, #ffeb3b 90%, transparent 100%)",
+                          borderRadius: "4px",
+                          filter: "blur(1px)",
+                        }}
+                      />
+                    </div>
+                    <p
+                      className="mt-2 text-gray-500 text-sm"
+                      style={{ fontFamily: "'Indie Flower', cursive" }}
                     >
-                      My Notebooks
-                    </h2>
-                    {/* Highlighter effect */}
-                    <div 
-                      className="absolute bottom-2 left-0 w-[110%] h-4 -z-0 -rotate-1 opacity-60"
-                      style={{
-                        background: 'linear-gradient(90deg, transparent 0%, #ffeb3b 10%, #ffeb3b 90%, transparent 100%)',
-                        borderRadius: '4px',
-                        filter: 'blur(1px)',
-                      }}
-                    />
+                      Select a collection to start writing...
+                    </p>
                   </div>
-                  <p 
-                    className="mt-2 text-gray-500 text-lg"
-                    style={{ fontFamily: "'Indie Flower', cursive" }}
-                  >
-                    Select a collection to start writing...
-                  </p>
-                </div>
 
-                {/* Notebooks List */}
-                <div className="space-y-24 pb-20">
-                  {notebooks.map((notebook, nbIndex) => (
-                    <NotebookItem
-                      key={notebook.id}
-                      notebook={notebook}
-                      isActive={activeNotebook === notebook.id}
-                      onSelect={onNotebookSelect}
-                      activeSection={activeSection}
-                      onSectionSelect={onSectionSelect}
-                      index={nbIndex}
-                    />
-                  ))}
+                  {/* Notebooks List */}
+                  <div className="flex flex-col gap-3 pb-10">
+                    {notebooks.map((notebook, nbIndex) => (
+                      <NotebookItem
+                        key={notebook.id}
+                        notebook={notebook}
+                        isActive={activeNotebook === notebook.id}
+                        onSelect={onNotebookSelect}
+                        activeSection={activeSection}
+                        onSectionSelect={onSectionSelect}
+                        index={nbIndex}
+                      />
+                    ))}
 
-                  {/* Add Notebook Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full mt-8 p-4 border-2 border-dashed border-gray-400 rounded-lg text-gray-500 hover:border-gray-600 hover:text-gray-700 transition-colors flex items-center justify-center gap-3"
-                    style={{ fontFamily: "'Patrick Hand', cursive", fontSize: '1.2rem' }}
-                  >
-                    <span className="text-2xl">+</span>
-                    <span>Create New Notebook</span>
-                  </motion.button>
+                    {/* Add Notebook Button */}
+                    <div className="flex justify-center mt-10">
+                      <motion.button
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-5 py-2.5 border-2 border-dashed border-gray-400 rounded-lg text-gray-500 hover:border-gray-600 hover:text-gray-700 transition-colors flex items-center justify-center gap-2 hover:bg-white/50"
+                        style={{
+                          fontFamily: "'Patrick Hand', cursive",
+                          fontSize: "0.95rem",
+                        }}
+                      >
+                        <span className="text-lg">+</span>
+                        <span>Create New Notebook</span>
+                      </motion.button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Plastic Tab on the right edge (Visual flair) */}
-            <div 
+            <div
               className="absolute -right-3 top-24 w-4 h-16 rounded-r-md opacity-80"
               style={{
-                background: 'linear-gradient(90deg, #ff6b6b, #ee5253)',
-                boxShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                background: "linear-gradient(90deg, #ff6b6b, #ee5253)",
+                boxShadow: "2px 2px 4px rgba(0,0,0,0.2)",
                 zIndex: -1,
               }}
             />
-             <div 
+            <div
               className="absolute -right-3 top-44 w-4 h-16 rounded-r-md opacity-80"
               style={{
-                background: 'linear-gradient(90deg, #4ecdc4, #45b7d1)',
-                boxShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+                background: "linear-gradient(90deg, #4ecdc4, #45b7d1)",
+                boxShadow: "2px 2px 4px rgba(0,0,0,0.2)",
                 zIndex: -1,
               }}
             />
@@ -251,43 +267,37 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
-      className="relative group"
+      className="relative"
     >
       {/* The Notebook "Cover" / Folder Tab */}
-      <div 
+      <div
         onClick={() => onSelect(notebook.id)}
-        className="cursor-pointer relative z-10 transition-transform duration-300"
-        style={{
-          transform: isActive ? 'translateX(10px)' : 'translateX(0)',
-        }}
+        className="cursor-pointer relative z-10"
       >
         <div
-          className="relative p-2.5 rounded-lg border-2 border-black/5 overflow-hidden"
+          className="relative px-5 py-5 rounded-xl border border-black/10 overflow-hidden transition-all duration-300"
           style={{
-            background: isActive ? notebook.coverColor : 'white',
-            boxShadow: isActive 
-              ? '0 8px 20px rgba(0,0,0,0.15), 0 2px 6px rgba(0,0,0,0.1)' 
-              : '0 2px 5px rgba(0,0,0,0.05)',
-            transition: 'all 0.3s ease',
+            background: isActive ? notebook.coverColor : "white",
+            boxShadow: isActive
+              ? "0 8px 24px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1)"
+              : "0 2px 6px rgba(0,0,0,0.05)",
           }}
         >
           {/* Paper texture overlay */}
           <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')] mix-blend-multiply pointer-events-none" />
-          
-          <div className="flex items-center gap-2.5 relative z-10">
+
+          <div className="flex items-center gap-3.5 relative z-10">
             {/* Icon Container */}
-            <div 
-              className="w-9 h-9 rounded-full flex items-center justify-center text-2xl bg-white/30 shadow-inner border border-white/20 flex-shrink-0"
-            >
+            <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/30 shadow-inner border border-white/20 flex-shrink-0">
               {/* Notebook Icon SVG */}
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                className="w-6 h-6 text-gray-700"
-                strokeWidth="2" 
-                strokeLinecap="round" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                className="w-5 h-5 text-gray-700"
+                strokeWidth="2"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               >
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
@@ -295,38 +305,46 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
               </svg>
             </div>
 
-            <div className="flex-1 overflow-hidden">
-              <h3 
-                className={`text-lg font-bold leading-none mb-1 truncate ${isActive ? 'text-white' : 'text-gray-800'}`}
-                style={{ 
+            <div className="flex-1 overflow-hidden min-w-0">
+              <h3
+                className={`text-lg font-bold leading-tight mb-1 truncate ${
+                  isActive ? "text-white" : "text-gray-800"
+                }`}
+                style={{
                   fontFamily: "'Caveat', cursive",
-                  textShadow: isActive ? '1px 1px 0 rgba(0,0,0,0.1)' : 'none',
+                  textShadow: isActive ? "1px 1px 0 rgba(0,0,0,0.1)" : "none",
                 }}
               >
                 {notebook.name}
               </h3>
-              <p 
-                className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-500'} truncate`}
+              <p
+                className={`text-xs ${
+                  isActive ? "text-white/75" : "text-gray-500"
+                } truncate`}
                 style={{ fontFamily: "'Indie Flower', cursive" }}
               >
-                {notebook.sections.length} sections • {notebook.sections.reduce((acc, s) => acc + s.notes.length, 0)} notes
+                {notebook.sections.length} sections •{" "}
+                {notebook.sections.reduce((acc, s) => acc + s.notes.length, 0)}{" "}
+                notes
               </p>
             </div>
 
             {/* Chevron */}
             <motion.div
               animate={{ rotate: isActive ? 90 : 0 }}
-              className={`text-xl ${isActive ? 'text-white' : 'text-gray-400'}`}
+              className={`flex-shrink-0 ${
+                isActive ? "text-white" : "text-gray-400"
+              }`}
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="24" 
-                height="24" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
                 strokeLinejoin="round"
               >
                 <polyline points="9 18 15 12 9 6"></polyline>
@@ -336,13 +354,13 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
         </div>
 
         {/* Decorative Tape (Visual detail) */}
-        <div 
+        <div
           className="absolute -top-3 left-8 w-24 h-6 opacity-40 z-20"
           style={{
-            background: 'rgba(255,255,255,0.6)',
-            transform: 'rotate(-2deg)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-            backdropFilter: 'blur(2px)',
+            background: "rgba(255,255,255,0.6)",
+            transform: "rotate(-2deg)",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+            backdropFilter: "blur(2px)",
           }}
         />
       </div>
@@ -352,22 +370,23 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
         {isActive && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden pl-8 pr-4 pt-6 pb-4"
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden mt-6"
           >
-            <div 
-              className="relative border-l-2 border-dashed border-gray-300 pl-8 py-4 space-y-6"
-            >
-              {notebook.sections.map((section, sIndex) => (
-                <SectionItem
-                  key={section.id}
-                  section={section}
-                  isActive={activeSection === section.id}
-                  onClick={() => onSectionSelect(section.id)}
-                  index={sIndex}
-                />
-              ))}
+            <div className="py-2 ml-6 pl-4 border-l-2 border-dashed border-gray-300">
+              <div className="flex flex-col gap-2">
+                {notebook.sections.map((section, sIndex) => (
+                  <SectionItem
+                    key={section.id}
+                    section={section}
+                    isActive={activeSection === section.id}
+                    onClick={() => onSectionSelect(section.id)}
+                    index={sIndex}
+                  />
+                ))}
+              </div>
             </div>
           </motion.div>
         )}
@@ -384,49 +403,53 @@ interface SectionItemProps {
   index: number;
 }
 
-const SectionItem: React.FC<SectionItemProps> = ({ section, isActive, onClick, index }) => {
+const SectionItem: React.FC<SectionItemProps> = ({
+  section,
+  isActive,
+  onClick,
+  index,
+}) => {
   return (
     <motion.button
       onClick={onClick}
       initial={{ x: -10, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       transition={{ delay: index * 0.05 }}
-      className="w-full relative group"
+      whileHover={{ x: 4 }}
+      whileTap={{ scale: 0.98 }}
+      className="group text-left"
     >
       <div
-        className="flex items-center gap-4 px-5 py-4 rounded-md transition-all duration-200"
-        style={{
-          background: isActive ? 'white' : 'transparent',
-          boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
-          transform: isActive ? 'scale(1.02) rotate(1deg)' : 'scale(1)',
-        }}
+        className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+          isActive ? "bg-white shadow-sm" : "hover:bg-white/40"
+        }`}
       >
         {/* Color Tag */}
-        <div 
-          className="w-3 h-3 rounded-full shadow-sm"
-          style={{ background: section.color, border: '1px solid rgba(0,0,0,0.1)' }}
+        <div
+          className="w-3 h-3 rounded-full shadow-sm flex-shrink-0"
+          style={{
+            background: section.color,
+            border: "1px solid rgba(0,0,0,0.1)",
+          }}
         />
-        
-        <span 
-          className={`flex-1 text-left text-base ${isActive ? 'font-bold text-gray-800' : 'text-gray-600 group-hover:text-gray-800'} truncate`}
+
+        <span
+          className={`text-sm ${
+            isActive
+              ? "font-semibold text-gray-800"
+              : "text-gray-600 group-hover:text-gray-800"
+          }`}
           style={{ fontFamily: "'Indie Flower', cursive" }}
         >
           {section.name}
         </span>
 
         {section.notes.length > 0 && (
-          <span className="text-xs text-gray-400 font-mono">
+          <span className="text-xs text-gray-400 font-mono ml-auto">
             {section.notes.length}
           </span>
         )}
       </div>
-      
-      {/* Underline for non-active items on hover */}
-      {!isActive && (
-        <div 
-          className="absolute bottom-2 left-4 right-4 h-px bg-gray-400 scale-x-0 group-hover:scale-x-100 transition-transform origin-left opacity-30"
-        />
-      )}
     </motion.button>
   );
 };
