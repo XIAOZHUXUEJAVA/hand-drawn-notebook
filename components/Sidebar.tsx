@@ -332,6 +332,13 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
             {/* Chevron */}
             <motion.div
               animate={{ rotate: isActive ? 90 : 0 }}
+              transition={{ 
+                type: "spring", 
+                stiffness: 400, 
+                damping: 30,
+                mass: 0.5,
+              }}
+              style={{ willChange: "transform" }}
               className={`flex-shrink-0 ${
                 isActive ? "text-white" : "text-gray-400"
               }`}
@@ -366,14 +373,48 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
       </div>
 
       {/* Sections List (The "Pages" inside) */}
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isActive && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden mt-3"
+            initial={{ maxHeight: 0, opacity: 0 }}
+            animate={{ 
+              maxHeight: 500,
+              opacity: 1,
+              transition: {
+                maxHeight: {
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 35,
+                  mass: 0.6,
+                },
+                opacity: {
+                  duration: 0.15,
+                  ease: "easeOut",
+                }
+              }
+            }}
+            exit={{ 
+              maxHeight: 0,
+              opacity: 0,
+              transition: {
+                maxHeight: {
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 35,
+                  mass: 0.6,
+                },
+                opacity: {
+                  duration: 0.1,
+                  ease: "easeIn",
+                }
+              }
+            }}
+            style={{
+              overflow: "hidden",
+              willChange: "max-height, opacity",
+              transform: "translateZ(0)", // 强制 GPU 加速
+            }}
+            className="mt-3"
           >
             <div className="py-1 ml-4 pl-4 border-l-2 border-dashed border-gray-300">
               <div className="flex flex-col gap-2">
@@ -412,11 +453,13 @@ const SectionItem: React.FC<SectionItemProps> = ({
   return (
     <motion.button
       onClick={onClick}
-      initial={{ x: -10, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ delay: index * 0.05 }}
       whileHover={{ x: 4 }}
       whileTap={{ scale: 0.98 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 500, 
+        damping: 30 
+      }}
       className="group text-left"
     >
       <div

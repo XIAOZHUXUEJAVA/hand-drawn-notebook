@@ -139,10 +139,17 @@ export default function NotebookApp() {
 
 
   const handleNotebookSelect = (notebookId: string) => {
-    setActiveNotebook(notebookId);
-    const notebook = notebooks.find((nb) => nb.id === notebookId);
-    if (notebook && notebook.sections.length > 0) {
-      setActiveSection(notebook.sections[0].id);
+    // 如果点击的是已经激活的 notebook，则收起它
+    if (activeNotebook === notebookId) {
+      setActiveNotebook(null);
+      setActiveSection(null);
+    } else {
+      // 否则展开新的 notebook
+      setActiveNotebook(notebookId);
+      const notebook = notebooks.find((nb) => nb.id === notebookId);
+      if (notebook && notebook.sections.length > 0) {
+        setActiveSection(notebook.sections[0].id);
+      }
     }
   };
 
