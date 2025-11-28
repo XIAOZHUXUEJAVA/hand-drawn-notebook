@@ -7,12 +7,16 @@ interface NotePageProps {
   note: Note;
   onUpdate: (note: Note) => void;
   activeTool: Tool;
+  pendingImage?: string | null;
+  onImageInserted?: () => void;
 }
 
 export const NotePage: React.FC<NotePageProps> = ({
   note,
   onUpdate,
   activeTool,
+  pendingImage,
+  onImageInserted,
 }) => {
   const [isFlipping, setIsFlipping] = useState(false);
   const editorRef = React.useRef<HTMLDivElement>(null);
