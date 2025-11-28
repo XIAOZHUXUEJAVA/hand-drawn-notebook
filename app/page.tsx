@@ -1,28 +1,27 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Toolbar, NotePage, Sidebar, PageNavigator } from "@/components";
-import { Note, Tool } from "@/types";
-import { sampleNotebooks, sampleNotes } from "@/data/sampleData";
+import React, { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Toolbar, NotePage, PageNavigator, Sidebar } from '@/components';
+import { Note, Tool } from '@/types';
+import { sampleNotebooks, sampleNotes } from '@/data/sampleData';
 
 export default function NotebookApp() {
   const [notebooks] = useState(sampleNotebooks);
-  const [activeNotebook, setActiveNotebook] = useState<string | null>("nb1");
-  const [activeSection, setActiveSection] = useState<string | null>("sec1");
+  const [activeNotebook, setActiveNotebook] = useState<string | null>('nb1');
+  const [activeSection, setActiveSection] = useState<string | null>('sec1');
   // Initialize state with function to avoid hydration mismatch, or use useEffect
   const [currentNotes, setCurrentNotes] = useState<Note[]>(sampleNotes);
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [activeTool, setActiveTool] = useState<Tool>("pen");
+  const [activeTool, setActiveTool] = useState<Tool>('pen');
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [pageDirection, setPageDirection] = useState<"forward" | "backward">(
-    "forward"
-  );
+  const [pageDirection, setPageDirection] = useState<'forward' | 'backward'>('forward');
+  const [pendingImage, setPendingImage] = useState<string | null>(null);
 
   // Load notes from local storage on mount
   useEffect(() => {
-    const savedNotes = localStorage.getItem("notebook_notes");
+    const savedNotes = localStorage.getItem('notebook_notes');
     if (savedNotes) {
       try {
         const parsed = JSON.parse(savedNotes);
@@ -34,7 +33,7 @@ export default function NotebookApp() {
         }));
         setCurrentNotes(hydratedNotes);
       } catch (e) {
-        console.error("Failed to load notes", e);
+        console.error('Failed to load notes', e);
       }
     }
     setIsLoaded(true);
@@ -43,7 +42,7 @@ export default function NotebookApp() {
   // Save notes to local storage whenever they change
   useEffect(() => {
     if (isLoaded) {
-      localStorage.setItem("notebook_notes", JSON.stringify(currentNotes));
+      localStorage.setItem('notebook_notes', JSON.stringify(currentNotes));
     }
   }, [currentNotes, isLoaded]);
 
@@ -51,9 +50,7 @@ export default function NotebookApp() {
   useEffect(() => {
     if (activeNotebook && activeSection) {
       const notebook = notebooks.find((nb) => nb.id === activeNotebook);
-      const section = notebook?.sections.find(
-        (sec) => sec.id === activeSection
-      );
+      const section = notebook?.sections.find((sec) => sec.id === activeSection);
       if (section) {
         setCurrentNotes(section.notes);
         setCurrentPageIndex(0);
@@ -61,10 +58,12 @@ export default function NotebookApp() {
     }
   }, [activeNotebook, activeSection, notebooks]);
 
+
+
   const currentNote = currentNotes[currentPageIndex];
 
   const handlePageChange = (newIndex: number) => {
-    setPageDirection(newIndex > currentPageIndex ? "forward" : "backward");
+    setPageDirection(newIndex > currentPageIndex ? 'forward' : 'backward');
     setCurrentPageIndex(newIndex);
   };
 
@@ -78,12 +77,12 @@ export default function NotebookApp() {
   const handleNewNote = () => {
     const newNote: Note = {
       id: `note-${Date.now()}`,
-      title: "New Note",
-      content: "",
+      title: 'New Note',
+      content: '',
       createdAt: new Date(),
       updatedAt: new Date(),
-      color: "white",
-      lineStyle: "blue",
+      color: 'white',
+      lineStyle: 'blue',
       bookmarked: false,
       attachments: [],
       checkboxes: [],
@@ -96,9 +95,7 @@ export default function NotebookApp() {
     if (currentNotes.length > 1 && currentNote) {
       const confirmed = window.confirm(`Delete "${currentNote.title}"?`);
       if (confirmed) {
-        const updatedNotes = currentNotes.filter(
-          (note) => note.id !== currentNote.id
-        );
+        const updatedNotes = currentNotes.filter((note) => note.id !== currentNote.id);
         setCurrentNotes(updatedNotes);
         setCurrentPageIndex(Math.max(0, currentPageIndex - 1));
       }
@@ -112,33 +109,18 @@ export default function NotebookApp() {
     reader.onload = (e) => {
       const result = e.target?.result as string;
       if (result) {
-        const newAttachment = {
-          id: `att-${Date.now()}`,
-          type: "image" as const,
-          url: result,
-          name: file.name,
-          rotation: Math.random() * 10 - 5, // Random rotation for style
-          position: { x: 0, y: 0 }, // Default position
-        };
-
-        const updatedNote = {
-          ...currentNote,
-          attachments: [...(currentNote.attachments || []), newAttachment],
-          updatedAt: new Date(),
-        };
-
-        handleNoteUpdate(updatedNote);
+        setPendingImage(result);
       }
     };
     reader.readAsDataURL(file);
   };
 
   const pageVariants = {
-    enter: (direction: "forward" | "backward") => ({
-      rotateY: direction === "forward" ? 90 : -90,
+    enter: (direction: 'forward' | 'backward') => ({
+      rotateY: direction === 'forward' ? 90 : -90,
       opacity: 0,
       scale: 0.8,
-      x: direction === "forward" ? 100 : -100,
+      x: direction === 'forward' ? 100 : -100,
     }),
     center: {
       rotateY: 0,
@@ -146,12 +128,26 @@ export default function NotebookApp() {
       scale: 1,
       x: 0,
     },
-    exit: (direction: "forward" | "backward") => ({
-      rotateY: direction === "forward" ? -90 : 90,
+    exit: (direction: 'forward' | 'backward') => ({
+      rotateY: direction === 'forward' ? -90 : 90,
       opacity: 0,
       scale: 0.8,
-      x: direction === "forward" ? -100 : 100,
+      x: direction === 'forward' ? -100 : 100,
     }),
+  };
+
+
+
+  const handleNotebookSelect = (notebookId: string) => {
+    setActiveNotebook(notebookId);
+    const notebook = notebooks.find((nb) => nb.id === notebookId);
+    if (notebook && notebook.sections.length > 0) {
+      setActiveSection(notebook.sections[0].id);
+    }
+  };
+
+  const handleSectionSelect = (sectionId: string) => {
+    setActiveSection(sectionId);
   };
 
   return (
@@ -161,13 +157,13 @@ export default function NotebookApp() {
         <div
           className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20"
           style={{
-            background: "radial-gradient(circle, #fbbf24 0%, transparent 70%)",
+            background: 'radial-gradient(circle, #fbbf24 0%, transparent 70%)',
           }}
         />
         <div
           className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-3xl opacity-10"
           style={{
-            background: "radial-gradient(circle, #3b82f6 0%, transparent 70%)",
+            background: 'radial-gradient(circle, #3b82f6 0%, transparent 70%)',
           }}
         />
       </div>
@@ -177,10 +173,8 @@ export default function NotebookApp() {
         notebooks={notebooks}
         activeNotebook={activeNotebook}
         activeSection={activeSection}
-        onNotebookSelect={(id) =>
-          setActiveNotebook(activeNotebook === id ? null : id)
-        }
-        onSectionSelect={setActiveSection}
+        onNotebookSelect={handleNotebookSelect}
+        onSectionSelect={handleSectionSelect}
         isOpen={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
       />
@@ -207,20 +201,22 @@ export default function NotebookApp() {
                 animate="center"
                 exit="exit"
                 transition={{
-                  rotateY: { type: "spring", stiffness: 100, damping: 20 },
+                  rotateY: { type: 'spring', stiffness: 100, damping: 20 },
                   opacity: { duration: 0.3 },
                   scale: { duration: 0.3 },
-                  x: { type: "spring", stiffness: 100, damping: 20 },
+                  x: { type: 'spring', stiffness: 100, damping: 20 },
                 }}
                 style={{
-                  perspective: "2000px",
-                  transformStyle: "preserve-3d",
+                  perspective: '2000px',
+                  transformStyle: 'preserve-3d',
                 }}
               >
                 <NotePage
                   note={currentNote}
                   onUpdate={handleNoteUpdate}
                   activeTool={activeTool}
+                  pendingImage={pendingImage}
+                  onImageInserted={() => setPendingImage(null)}
                 />
               </motion.div>
             </AnimatePresence>
@@ -233,19 +229,13 @@ export default function NotebookApp() {
               <div className="text-6xl mb-4">📓</div>
               <h2
                 className="text-3xl mb-4"
-                style={{
-                  fontFamily: "'Caveat', cursive",
-                  color: "var(--paper-white)",
-                }}
+                style={{ fontFamily: "'Caveat', cursive", color: 'var(--paper-white)' }}
               >
                 No notes yet
               </h2>
               <p
                 className="text-lg opacity-60 mb-8"
-                style={{
-                  fontFamily: "'Kalam', cursive",
-                  color: "var(--paper-cream)",
-                }}
+                style={{ fontFamily: "'Kalam', cursive", color: 'var(--paper-cream)' }}
               >
                 Click the "New Note" button to create your first note
               </p>
@@ -272,13 +262,15 @@ export default function NotebookApp() {
         whileTap={{ scale: 0.9 }}
         className="fixed bottom-8 right-8 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl z-50"
         style={{
-          background: "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
-          border: "2px solid rgba(139, 92, 246, 0.3)",
+          background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
+          border: '2px solid rgba(139, 92, 246, 0.3)',
         }}
         title="Help & Tips"
       >
         ❓
       </motion.button>
+
+
     </div>
   );
 }

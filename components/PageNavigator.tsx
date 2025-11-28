@@ -51,62 +51,55 @@ export const PageNavigator: React.FC<PageNavigatorProps> = ({
   };
 
   return (
-    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3">
       <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        className="flex items-center gap-6 px-8 py-4 rounded-full shadow-deep"
+        transition={{ duration: 0.6, ease: "backOut" }}
+        className="flex items-center gap-4 px-6 py-2 rounded-lg relative"
         style={{
-          background: 'linear-gradient(135deg, #fdfdf8 0%, #faf8f3 100%)',
-          border: '2px solid rgba(0, 0, 0, 0.1)',
+          backgroundColor: '#fdfdf8', // Paper white
+          boxShadow: '2px 3px 10px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.05)',
+          border: '1px solid #e5e5e5',
         }}
       >
+        {/* Paper texture overlay */}
+        <div className="absolute inset-0 rounded-lg pointer-events-none" 
+             style={{ 
+               boxShadow: 'inset 0 0 15px rgba(0,0,0,0.01)',
+               background: 'linear-gradient(to bottom right, rgba(255,255,255,0.5), rgba(255,255,255,0))'
+             }} 
+        />
+
         {/* Previous Button */}
         <motion.button
           onClick={handlePrevious}
           disabled={!canGoPrevious}
           className={`
-            w-12 h-12 rounded-full flex items-center justify-center
-            transition-all duration-200
-            ${canGoPrevious ? 'cursor-pointer' : 'cursor-not-allowed opacity-30'}
+            w-10 h-10 flex items-center justify-center rounded-full
+            transition-colors duration-200 relative z-10
+            ${canGoPrevious ? 'cursor-pointer hover:bg-stone-100' : 'cursor-not-allowed opacity-20'}
           `}
-          style={{
-            background: canGoPrevious
-              ? 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)'
-              : '#e5e7eb',
-            boxShadow: canGoPrevious ? '0 4px 12px rgba(30, 58, 138, 0.3)' : 'none',
-          }}
-          whileHover={canGoPrevious ? { scale: 1.1, x: -2 } : {}}
-          whileTap={canGoPrevious ? { scale: 0.95 } : {}}
+          whileHover={canGoPrevious ? { scale: 1.1, rotate: -5 } : {}}
+          whileTap={canGoPrevious ? { scale: 0.9 } : {}}
         >
-          <svg
-            className="w-6 h-6 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-stone-700">
+             <path d="M19 12H5M12 19l-7-7 7-7" />
+           </svg>
         </motion.button>
 
         {/* Page Indicator */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 px-2 relative z-10 select-none">
           <span
             className="text-2xl font-bold"
-            style={{ fontFamily: "'Caveat', cursive", color: 'var(--ink-black)' }}
+            style={{ fontFamily: "'Caveat', cursive", color: '#2c2c2c' }}
           >
             Page {currentPage + 1}
           </span>
-          <span className="text-gray-400">/</span>
+          <span className="text-stone-400 text-xl" style={{ fontFamily: "'Caveat', cursive" }}>/</span>
           <span
-            className="text-xl opacity-60"
-            style={{ fontFamily: "'Caveat', cursive", color: 'var(--ink-gray)' }}
+            className="text-xl text-stone-500"
+            style={{ fontFamily: "'Caveat', cursive" }}
           >
             {totalPages}
           </span>
@@ -117,50 +110,41 @@ export const PageNavigator: React.FC<PageNavigatorProps> = ({
           onClick={handleNext}
           disabled={!canGoNext}
           className={`
-            w-12 h-12 rounded-full flex items-center justify-center
-            transition-all duration-200
-            ${canGoNext ? 'cursor-pointer' : 'cursor-not-allowed opacity-30'}
+            w-10 h-10 flex items-center justify-center rounded-full
+            transition-colors duration-200 relative z-10
+            ${canGoNext ? 'cursor-pointer hover:bg-stone-100' : 'cursor-not-allowed opacity-20'}
           `}
-          style={{
-            background: canGoNext
-              ? 'linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%)'
-              : '#e5e7eb',
-            boxShadow: canGoNext ? '0 4px 12px rgba(30, 58, 138, 0.3)' : 'none',
-          }}
-          whileHover={canGoNext ? { scale: 1.1, x: 2 } : {}}
-          whileTap={canGoNext ? { scale: 0.95 } : {}}
+          whileHover={canGoNext ? { scale: 1.1, rotate: 5 } : {}}
+          whileTap={canGoNext ? { scale: 0.9 } : {}}
         >
-          <svg
-            className="w-6 h-6 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-stone-700">
+             <path d="M5 12h14M12 5l7 7-7 7" />
+           </svg>
         </motion.button>
       </motion.div>
 
-      {/* Page Dots */}
+      {/* Page Dots - Sketched circles */}
       {totalPages <= 10 && (
-        <div className="flex justify-center gap-2 mt-4">
+        <div className="flex justify-center gap-2">
           {Array.from({ length: totalPages }).map((_, index) => (
             <motion.button
               key={index}
               onClick={() => onPageChange(index)}
-              className="w-2 h-2 rounded-full transition-all duration-200"
-              style={{
-                backgroundColor: index === currentPage ? 'var(--ink-blue)' : 'var(--line-gray)',
-                transform: index === currentPage ? 'scale(1.5)' : 'scale(1)',
-              }}
-              whileHover={{ scale: 1.5 }}
-              whileTap={{ scale: 1.2 }}
-            />
+              className="relative w-3 h-3 flex items-center justify-center group"
+              whileHover={{ scale: 1.2 }}
+            >
+              {index === currentPage ? (
+                // Filled rough circle (Active)
+                <svg viewBox="0 0 12 12" className="w-full h-full text-stone-800 fill-current drop-shadow-sm">
+                   <path d="M6,1 C8.76142375,1 11,3.23857625 11,6 C11,8.76142375 8.76142375,11 6,11 C3.23857625,11 1,8.76142375 1,6 C1,3.23857625 3.23857625,1 6,1 Z" />
+                </svg>
+              ) : (
+                // Empty rough circle (Inactive)
+                <svg viewBox="0 0 12 12" className="w-full h-full text-stone-400 stroke-current fill-none group-hover:text-stone-600 transition-colors" strokeWidth="1.5">
+                   <path d="M6,1.5 C8.48528137,1.5 10.5,3.51471863 10.5,6 C10.5,8.48528137 8.48528137,10.5 6,10.5 C3.51471863,10.5 1.5,8.48528137 1.5,6 C1.5,3.51471863 3.51471863,1.5 6,1.5 Z" strokeLinecap="round" strokeDasharray="20 2" />
+                </svg>
+              )}
+            </motion.button>
           ))}
         </div>
       )}

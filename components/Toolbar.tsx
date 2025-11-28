@@ -45,10 +45,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
-        className="flex items-center gap-2 px-6 py-3 rounded-full shadow-deep"
+        className="flex items-center gap-2 px-6 py-3 rounded-full"
         style={{
           background: 'linear-gradient(135deg, #8b4513 0%, #d2691e 100%)',
-          border: '2px solid rgba(139, 69, 19, 0.3)',
+          boxShadow: 'inset 0 0 0 2px rgba(139, 69, 19, 0.3), var(--shadow-deep)',
         }}
       >
         {/* New Note Button */}
