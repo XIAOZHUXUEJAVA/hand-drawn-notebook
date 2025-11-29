@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { signUp } from "@/lib/api/auth";
 
 export default function RegisterPage() {
   const [displayName, setDisplayName] = useState("");
@@ -13,7 +13,6 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const supabase = createClient();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,18 +30,10 @@ export default function RegisterPage() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          display_name: displayName,
-        },
-      },
-    });
+    const { error } = await signUp({ email, password, displayName });
 
     if (error) {
-      setError(error.message);
+      setError(error);
       setLoading(false);
     } else {
       setSuccess(true);
