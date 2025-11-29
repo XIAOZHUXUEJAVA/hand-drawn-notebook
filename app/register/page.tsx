@@ -161,7 +161,7 @@ export default function RegisterPage() {
 
         {/* Paper */}
         <div
-          className="paper-texture ruled-lines relative rounded-sm p-8 pl-12"
+          className="paper-texture relative rounded-sm p-8 pl-12"
           style={{
             backgroundColor: "var(--paper-white)",
             boxShadow: "var(--shadow-deep), 4px 4px 0 rgba(0,0,0,0.1)",
