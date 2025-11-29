@@ -1,24 +1,25 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Tool } from '@/types';
+import React from "react";
+import { motion } from "framer-motion";
+import { Tool } from "@/types";
 
 interface ToolbarProps {
   activeTool: Tool;
   onToolChange: (tool: Tool) => void;
   onNewNote: () => void;
   onDeleteNote: () => void;
+  onSaveNote: () => void;
   onAddImage: (file: File) => void;
 }
 
 const tools: { id: Tool; label: string; icon: string; color: string }[] = [
-  { id: 'pen', label: 'Pen', icon: '🖊️', color: '#1e3a8a' },
-  { id: 'ink', label: 'Ink', icon: '✒️', color: '#000000' },
-  { id: 'pencil', label: 'Pencil', icon: '✏️', color: '#6b7280' },
-  { id: 'highlighter', label: 'Highlighter', icon: '🖍️', color: '#fbbf24' },
-  { id: 'eraser', label: 'Eraser', icon: '🧹', color: '#ef4444' },
-  { id: 'select', label: 'Select', icon: '👆', color: '#8b5cf6' },
+  { id: "pen", label: "Pen", icon: "🖊️", color: "#1e3a8a" },
+  { id: "ink", label: "Ink", icon: "✒️", color: "#000000" },
+  { id: "pencil", label: "Pencil", icon: "✏️", color: "#6b7280" },
+  { id: "highlighter", label: "Highlighter", icon: "🖍️", color: "#fbbf24" },
+  { id: "eraser", label: "Eraser", icon: "🧹", color: "#ef4444" },
+  { id: "select", label: "Select", icon: "👆", color: "#8b5cf6" },
 ];
 
 export const Toolbar: React.FC<ToolbarProps> = ({
@@ -26,6 +27,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onToolChange,
   onNewNote,
   onDeleteNote,
+  onSaveNote,
   onAddImage,
 }) => {
   const fileInputRef = React.useRef<HTMLInputElement>(null);
@@ -36,7 +38,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       onAddImage(file);
     }
     // Reset input so same file can be selected again
-    if (e.target) e.target.value = '';
+    if (e.target) e.target.value = "";
   };
 
   return (
@@ -47,8 +49,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
         className="flex items-center gap-2 px-6 py-3 rounded-full"
         style={{
-          background: 'linear-gradient(135deg, #8b4513 0%, #d2691e 100%)',
-          boxShadow: 'inset 0 0 0 2px rgba(139, 69, 19, 0.3), var(--shadow-deep)',
+          background: "linear-gradient(135deg, #8b4513 0%, #d2691e 100%)",
+          boxShadow:
+            "inset 0 0 0 2px rgba(139, 69, 19, 0.3), var(--shadow-deep)",
         }}
       >
         {/* New Note Button */}
@@ -97,6 +100,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           onClick={onDeleteNote}
           color="#ef4444"
         />
+
+        {/* Save Button */}
+        <ToolButton
+          icon="💾"
+          label="Save"
+          onClick={onSaveNote}
+          color="#8b4513"
+        />
       </motion.div>
     </div>
   );
@@ -115,7 +126,7 @@ const ToolButton: React.FC<ToolButtonProps> = ({
   label,
   onClick,
   isActive = false,
-  color = '#6b7280',
+  color = "#6b7280",
 }) => {
   return (
     <motion.button
@@ -128,18 +139,18 @@ const ToolButton: React.FC<ToolButtonProps> = ({
         flex items-center justify-center
         text-2xl
         transition-all duration-200
-        ${isActive ? 'shadow-lg' : 'shadow-md'}
+        ${isActive ? "shadow-lg" : "shadow-md"}
       `}
       style={{
-        backgroundColor: isActive ? color : '#fdfdf8',
-        border: `2px solid ${isActive ? 'white' : 'rgba(0, 0, 0, 0.1)'}`,
-        boxShadow: isActive 
+        backgroundColor: isActive ? color : "#fdfdf8",
+        border: `2px solid ${isActive ? "white" : "rgba(0, 0, 0, 0.1)"}`,
+        boxShadow: isActive
           ? `0 4px 12px ${color}40, inset 0 2px 4px rgba(255, 255, 255, 0.3)`
-          : '0 2px 8px rgba(0, 0, 0, 0.15)',
+          : "0 2px 8px rgba(0, 0, 0, 0.15)",
       }}
       title={label}
     >
-      <span className={`filter ${isActive ? 'brightness-0 invert' : ''}`}>
+      <span className={`filter ${isActive ? "brightness-0 invert" : ""}`}>
         {icon}
       </span>
 
@@ -155,7 +166,7 @@ const ToolButton: React.FC<ToolButtonProps> = ({
         <motion.div
           layoutId="activeToolIndicator"
           className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white"
-          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+          transition={{ type: "spring", stiffness: 500, damping: 30 }}
         />
       )}
     </motion.button>

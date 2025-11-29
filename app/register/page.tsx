@@ -4,27 +4,27 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { signUp } from "@/lib/api/auth";
+import { useToast } from "@/components";
 
 export default function RegisterPage() {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const toast = useToast();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
@@ -33,9 +33,10 @@ export default function RegisterPage() {
     const { error } = await signUp({ email, password, displayName });
 
     if (error) {
-      setError(error);
+      toast.error(error);
       setLoading(false);
     } else {
+      toast.success("Account created! Check your email to confirm.");
       setSuccess(true);
     }
   };
@@ -328,23 +329,6 @@ export default function RegisterPage() {
                   placeholder="Type it again"
                 />
               </div>
-
-              {/* Error */}
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="p-3 rounded-lg"
-                  style={{
-                    backgroundColor: "rgba(239, 68, 68, 0.1)",
-                    border: "1px solid rgba(239, 68, 68, 0.3)",
-                    fontFamily: "'Kalam', cursive",
-                    color: "#b91c1c",
-                  }}
-                >
-                  ⚠️ {error}
-                </motion.div>
-              )}
 
               {/* Submit Button */}
               <motion.button

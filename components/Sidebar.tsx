@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Notebook, Section } from "@/types";
+import { useToast } from "./Toast";
 
 interface SidebarProps {
   notebooks: Notebook[];
@@ -10,6 +11,12 @@ interface SidebarProps {
   activeSection: string | null;
   onNotebookSelect: (notebookId: string) => void;
   onSectionSelect: (sectionId: string) => void;
+  onCreateNotebook: (name: string, color: string) => Promise<void>;
+  onCreateSection: (
+    notebookId: string,
+    name: string,
+    color: string
+  ) => Promise<void>;
   isOpen: boolean;
   onToggle: () => void;
 }
@@ -20,9 +27,46 @@ export const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
   onNotebookSelect,
   onSectionSelect,
+  onCreateNotebook,
+  onCreateSection,
   isOpen,
   onToggle,
 }) => {
+  const [showNewNotebook, setShowNewNotebook] = useState(false);
+  const [newNotebookName, setNewNotebookName] = useState("");
+  const [newNotebookColor, setNewNotebookColor] = useState("#3b82f6");
+  const [isCreating, setIsCreating] = useState(false);
+  const toast = useToast();
+
+  const notebookColors = [
+    "#3b82f6", // blue
+    "#10b981", // green
+    "#f59e0b", // amber
+    "#ef4444", // red
+    "#8b5cf6", // purple
+    "#ec4899", // pink
+    "#06b6d4", // cyan
+    "#84cc16", // lime
+  ];
+
+  const handleCreateNotebook = async () => {
+    if (!newNotebookName.trim()) {
+      toast.error("Please enter a notebook name");
+      return;
+    }
+    setIsCreating(true);
+    try {
+      await onCreateNotebook(newNotebookName.trim(), newNotebookColor);
+      setNewNotebookName("");
+      setShowNewNotebook(false);
+      toast.success("Notebook created!");
+    } catch {
+      toast.error("Failed to create notebook");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   return (
     <>
       {/* Toggle Button - Only visible when sidebar is closed */}
@@ -183,24 +227,98 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         onSelect={onNotebookSelect}
                         activeSection={activeSection}
                         onSectionSelect={onSectionSelect}
+                        onCreateSection={onCreateSection}
                         index={nbIndex}
                       />
                     ))}
 
-                    {/* Add Notebook Button */}
-                    <div className="flex justify-center mt-6">
-                      <motion.button
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="px-5 py-2.5 border-2 border-dashed border-gray-400 rounded-lg text-gray-500 hover:border-gray-600 hover:text-gray-700 transition-colors flex items-center justify-center gap-2 hover:bg-white/50"
-                        style={{
-                          fontFamily: "'Patrick Hand', cursive",
-                          fontSize: "0.95rem",
-                        }}
-                      >
-                        <span className="text-lg">+</span>
-                        <span>Create New Notebook</span>
-                      </motion.button>
+                    {/* Add Notebook Button / Form */}
+                    <div className="mt-6">
+                      <AnimatePresence mode="wait">
+                        {showNewNotebook ? (
+                          <motion.div
+                            key="form"
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="p-4 bg-white rounded-xl shadow-md border border-gray-200"
+                          >
+                            <input
+                              type="text"
+                              value={newNotebookName}
+                              onChange={(e) =>
+                                setNewNotebookName(e.target.value)
+                              }
+                              placeholder="Notebook name..."
+                              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:outline-none mb-3"
+                              style={{ fontFamily: "'Kalam', cursive" }}
+                              autoFocus
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") handleCreateNotebook();
+                                if (e.key === "Escape")
+                                  setShowNewNotebook(false);
+                              }}
+                            />
+                            {/* Color picker */}
+                            <div className="flex gap-2 mb-3 flex-wrap">
+                              {notebookColors.map((color) => (
+                                <button
+                                  key={color}
+                                  onClick={() => setNewNotebookColor(color)}
+                                  className={`w-6 h-6 rounded-full transition-transform ${
+                                    newNotebookColor === color
+                                      ? "scale-125 ring-2 ring-offset-1 ring-gray-400"
+                                      : ""
+                                  }`}
+                                  style={{ backgroundColor: color }}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex gap-2">
+                              <motion.button
+                                whileTap={{ scale: 0.95 }}
+                                onClick={handleCreateNotebook}
+                                disabled={isCreating}
+                                className="flex-1 py-2 rounded-lg text-white font-medium disabled:opacity-50"
+                                style={{
+                                  backgroundColor: newNotebookColor,
+                                  fontFamily: "'Patrick Hand', cursive",
+                                }}
+                              >
+                                {isCreating ? "Creating..." : "Create"}
+                              </motion.button>
+                              <motion.button
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setShowNewNotebook(false)}
+                                className="px-4 py-2 rounded-lg bg-gray-200 text-gray-600"
+                                style={{
+                                  fontFamily: "'Patrick Hand', cursive",
+                                }}
+                              >
+                                Cancel
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        ) : (
+                          <motion.button
+                            key="button"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowNewNotebook(true)}
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-full px-5 py-2.5 border-2 border-dashed border-gray-400 rounded-lg text-gray-500 hover:border-gray-600 hover:text-gray-700 transition-colors flex items-center justify-center gap-2 hover:bg-white/50"
+                            style={{
+                              fontFamily: "'Patrick Hand', cursive",
+                              fontSize: "0.95rem",
+                            }}
+                          >
+                            <span className="text-lg">+</span>
+                            <span>Create New Notebook</span>
+                          </motion.button>
+                        )}
+                      </AnimatePresence>
                     </div>
                   </div>
                 </div>
@@ -251,6 +369,11 @@ interface NotebookItemProps {
   onSelect: (id: string) => void;
   activeSection: string | null;
   onSectionSelect: (id: string) => void;
+  onCreateSection: (
+    notebookId: string,
+    name: string,
+    color: string
+  ) => Promise<void>;
   index: number;
 }
 
@@ -260,8 +383,47 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
   onSelect,
   activeSection,
   onSectionSelect,
+  onCreateSection,
   index,
 }) => {
+  const [showNewSection, setShowNewSection] = useState(false);
+  const [newSectionName, setNewSectionName] = useState("");
+  const [newSectionColor, setNewSectionColor] = useState("#60a5fa");
+  const [isCreating, setIsCreating] = useState(false);
+  const toast = useToast();
+
+  const sectionColors = [
+    "#60a5fa",
+    "#34d399",
+    "#fbbf24",
+    "#f87171",
+    "#a78bfa",
+    "#f472b6",
+    "#22d3ee",
+    "#a3e635",
+  ];
+
+  const handleCreateSection = async () => {
+    if (!newSectionName.trim()) {
+      toast.error("Please enter a section name");
+      return;
+    }
+    setIsCreating(true);
+    try {
+      await onCreateSection(
+        notebook.id,
+        newSectionName.trim(),
+        newSectionColor
+      );
+      setNewSectionName("");
+      setShowNewSection(false);
+      toast.success("Section created!");
+    } catch {
+      toast.error("Failed to create section");
+    } finally {
+      setIsCreating(false);
+    }
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -332,9 +494,9 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
             {/* Chevron */}
             <motion.div
               animate={{ rotate: isActive ? 90 : 0 }}
-              transition={{ 
-                type: "spring", 
-                stiffness: 400, 
+              transition={{
+                type: "spring",
+                stiffness: 400,
                 damping: 30,
                 mass: 0.5,
               }}
@@ -377,7 +539,7 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
         {isActive && (
           <motion.div
             initial={{ maxHeight: 0, opacity: 0 }}
-            animate={{ 
+            animate={{
               maxHeight: 500,
               opacity: 1,
               transition: {
@@ -390,10 +552,10 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
                 opacity: {
                   duration: 0.15,
                   ease: "easeOut",
-                }
-              }
+                },
+              },
             }}
-            exit={{ 
+            exit={{
               maxHeight: 0,
               opacity: 0,
               transition: {
@@ -406,8 +568,8 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
                 opacity: {
                   duration: 0.1,
                   ease: "easeIn",
-                }
-              }
+                },
+              },
             }}
             style={{
               overflow: "hidden",
@@ -427,6 +589,81 @@ const NotebookItem: React.FC<NotebookItemProps> = ({
                     index={sIndex}
                   />
                 ))}
+
+                {/* Add Section Button / Form */}
+                <AnimatePresence mode="wait">
+                  {showNewSection ? (
+                    <motion.div
+                      key="section-form"
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -5 }}
+                      className="p-3 bg-white rounded-lg shadow-sm border border-gray-200"
+                    >
+                      <input
+                        type="text"
+                        value={newSectionName}
+                        onChange={(e) => setNewSectionName(e.target.value)}
+                        placeholder="Section name..."
+                        className="w-full px-2 py-1.5 rounded border border-gray-300 focus:border-blue-500 focus:outline-none text-sm mb-2"
+                        style={{ fontFamily: "'Indie Flower', cursive" }}
+                        autoFocus
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") handleCreateSection();
+                          if (e.key === "Escape") setShowNewSection(false);
+                        }}
+                      />
+                      <div className="flex gap-1.5 mb-2 flex-wrap">
+                        {sectionColors.map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => setNewSectionColor(color)}
+                            className={`w-5 h-5 rounded-full transition-transform ${
+                              newSectionColor === color
+                                ? "scale-125 ring-2 ring-offset-1 ring-gray-300"
+                                : ""
+                            }`}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={handleCreateSection}
+                          disabled={isCreating}
+                          className="flex-1 py-1.5 rounded text-white text-sm font-medium disabled:opacity-50"
+                          style={{
+                            backgroundColor: newSectionColor,
+                            fontFamily: "'Patrick Hand', cursive",
+                          }}
+                        >
+                          {isCreating ? "..." : "Add"}
+                        </button>
+                        <button
+                          onClick={() => setShowNewSection(false)}
+                          className="px-3 py-1.5 rounded bg-gray-200 text-gray-600 text-sm"
+                          style={{ fontFamily: "'Patrick Hand', cursive" }}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.button
+                      key="section-button"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setShowNewSection(true)}
+                      whileHover={{ x: 4 }}
+                      className="flex items-center gap-2 px-3 py-2 text-gray-400 hover:text-gray-600 transition-colors"
+                      style={{ fontFamily: "'Indie Flower', cursive" }}
+                    >
+                      <span className="text-lg">+</span>
+                      <span className="text-sm">Add section</span>
+                    </motion.button>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>
@@ -455,10 +692,10 @@ const SectionItem: React.FC<SectionItemProps> = ({
       onClick={onClick}
       whileHover={{ x: 4 }}
       whileTap={{ scale: 0.98 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 500, 
-        damping: 30 
+      transition={{
+        type: "spring",
+        stiffness: 500,
+        damping: 30,
       }}
       className="group text-left"
     >

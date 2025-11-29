@@ -5,25 +5,26 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/api/auth";
+import { useToast } from "@/components";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const toast = useToast();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     const { error } = await signIn({ email, password });
 
     if (error) {
-      setError(error);
+      toast.error(error);
       setLoading(false);
     } else {
+      toast.success("Welcome back! Opening your notebook...");
       router.push("/");
       router.refresh();
     }
@@ -194,23 +195,6 @@ export default function LoginPage() {
                   placeholder="••••••••"
                 />
               </div>
-
-              {/* Error */}
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  className="p-3 rounded-lg"
-                  style={{
-                    backgroundColor: "rgba(239, 68, 68, 0.1)",
-                    border: "1px solid rgba(239, 68, 68, 0.3)",
-                    fontFamily: "'Kalam', cursive",
-                    color: "#b91c1c",
-                  }}
-                >
-                  ⚠️ {error}
-                </motion.div>
-              )}
 
               {/* Submit Button */}
               <motion.button
