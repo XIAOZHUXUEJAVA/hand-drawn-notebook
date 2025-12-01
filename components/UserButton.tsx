@@ -72,12 +72,11 @@ export const UserButton: React.FC = () => {
         <motion.button
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full"
+          className="flex items-center gap-2 pl-4 pr-5 py-2.5 rounded-full"
           style={{
             background: "linear-gradient(135deg, #8b4513 0%, #d2691e 100%)",
             boxShadow:
-              "0 3px 10px rgba(139, 69, 19, 0.3), inset 0 1px 2px rgba(255,255,255,0.2)",
-            border: "2px solid rgba(139, 69, 19, 0.4)",
+              "0 3px 10px rgba(139, 69, 19, 0.3), inset 0 1px 2px rgba(255,255,255,0.2), 0 0 0 1px rgba(139, 69, 19, 0.4)",
           }}
         >
           <span className="text-lg">🔑</span>

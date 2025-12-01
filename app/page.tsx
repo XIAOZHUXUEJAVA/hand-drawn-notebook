@@ -9,6 +9,7 @@ import {
   Sidebar,
   UserButton,
   useToast,
+  HelpModal,
 } from "@/components";
 import { Note, Tool, Notebook } from "@/types";
 import { sampleNotebooks, sampleNotes } from "@/data/sampleData";
@@ -33,6 +34,7 @@ export default function NotebookApp() {
     "forward"
   );
   const [pendingImage, setPendingImage] = useState<string | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
   const toast = useToast();
 
   // localStorage 中存储的 Note 类型（日期为字符串）
@@ -413,15 +415,20 @@ export default function NotebookApp() {
         transition={{ delay: 1 }}
         whileHover={{ scale: 1.1, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
+        onClick={() => setShowHelp(true)}
         className="fixed bottom-8 right-8 w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl z-50"
         style={{
           background: "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
-          border: "2px solid rgba(139, 92, 246, 0.3)",
+          boxShadow:
+            "0 4px 12px rgba(139, 92, 246, 0.4), inset 0 2px 4px rgba(255,255,255,0.3), 0 0 0 2px rgba(139, 92, 246, 0.3)",
         }}
         title="Help & Tips"
       >
         ❓
       </motion.button>
+
+      {/* Help Modal */}
+      <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
     </div>
   );
 }
