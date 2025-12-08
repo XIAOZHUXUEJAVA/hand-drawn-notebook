@@ -234,7 +234,7 @@ export const NotePage: React.FC<NotePageProps> = ({
               onChange={handleTitleChange}
               className="w-full bg-transparent border-none outline-none text-4xl font-bold handwriting-cursor"
               style={{
-                fontFamily: "'Caveat', cursive",
+                fontFamily: "'Yozai', 'Caveat', cursive",
                 color: 'var(--ink-black)',
                 fontWeight: 700,
               }}
@@ -260,7 +260,7 @@ export const NotePage: React.FC<NotePageProps> = ({
         </div>
 
         {/* Date */}
-        <div className="mb-6 text-sm opacity-60 relative z-10" style={{ fontFamily: "'Patrick Hand', cursive" }}>
+        <div className="mb-6 text-sm opacity-60 relative z-10" style={{ fontFamily: "'Yozai', 'Patrick Hand', cursive" }}>
           {new Date(note.updatedAt).toLocaleDateString('en-US', {
             weekday: 'long',
             year: 'numeric',
@@ -277,7 +277,7 @@ export const NotePage: React.FC<NotePageProps> = ({
             suppressContentEditableWarning
             className="w-full min-h-[600px] outline-none text-xl leading-relaxed handwriting-cursor"
             style={{
-              fontFamily: "'Kalam', cursive",
+              fontFamily: "'Yozai', 'Kalam', cursive",
               color: 'var(--ink-black)',
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
@@ -318,7 +318,7 @@ export const NotePage: React.FC<NotePageProps> = ({
           {!note.content && (
             <div 
               className="absolute top-0 left-0 pointer-events-none opacity-40 text-xl"
-              style={{ fontFamily: "'Kalam', cursive" }}
+              style={{ fontFamily: "'Yozai', 'Kalam', cursive" }}
             >
               Start writing...
             </div>
@@ -350,7 +350,7 @@ export const NotePage: React.FC<NotePageProps> = ({
                 </div>
                 <span 
                   className={`text-lg transition-all ${checkbox.checked ? 'line-through opacity-50' : ''}`}
-                  style={{ fontFamily: "'Kalam', cursive" }}
+                  style={{ fontFamily: "'Yozai', 'Kalam', cursive" }}
                 >
                   {checkbox.text}
                 </span>

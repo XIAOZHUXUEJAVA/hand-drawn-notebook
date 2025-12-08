@@ -1,6 +1,34 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&display=swap");
 @import "tailwindcss";
 
+/* Yozai - 手绘风格中文字体（仅对中文字符生效） */
+@font-face {
+  font-family: 'Yozai';
+  src: url('/fonts/Yozai-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+F900-FAFF, U+2F800-2FA1F;
+}
+
+@font-face {
+  font-family: 'Yozai';
+  src: url('/fonts/Yozai-Regular.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+F900-FAFF, U+2F800-2FA1F;
+}
+
+@font-face {
+  font-family: 'Yozai';
+  src: url('/fonts/Yozai-Regular.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF, U+F900-FAFF, U+2F800-2FA1F;
+}
+
 :root {
   /* Paper Colors */
   --paper-white: #fdfdf8;
@@ -46,10 +74,10 @@
   --color-ink-black: var(--ink-black);
   --color-ink-blue: var(--ink-blue);
 
-  --font-handwriting: "Caveat", cursive;
-  --font-casual: "Kalam", cursive;
-  --font-hand: "Patrick Hand", cursive;
-  --font-indie: "Indie Flower", cursive;
+  --font-handwriting: "Yozai", "Caveat", cursive;
+  --font-casual: "Yozai", "Kalam", cursive;
+  --font-hand: "Yozai", "Patrick Hand", cursive;
+  --font-indie: "Yozai", "Indie Flower", cursive;
 }
 
 /* * {
@@ -61,7 +89,7 @@
 body {
   background: var(--desk-gradient);
   color: var(--ink-black);
-  font-family: "Kalam", cursive;
+  font-family: "Yozai", "Kalam", cursive;
   overflow-x: hidden;
   min-height: 100vh;
   position: relative;
